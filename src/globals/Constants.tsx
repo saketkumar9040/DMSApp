@@ -1,0 +1,1 @@
+export const URL = "https://apis.allsoft.co/api/documentManagement/"
