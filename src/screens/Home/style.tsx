@@ -103,13 +103,19 @@ const styles = StyleSheet.create({
     titleTextInput: {
         borderWidth: 1,
         borderColor: Colors.grey,
-        borderRadius: 10,
+        borderRadius: 5,
         paddingHorizontal: 15,
         padding: 5,
         width: 150,
         elevation: 10,
-        backgroundColor:Colors.bg
-    }
+        backgroundColor: Colors.bg
+    },
+    dropdown: {
+        borderColor: "#aaa",
+    },
+    dropdownContainer: {
+        borderColor: "#aaa",
+    },
 })
 
 export default styles;

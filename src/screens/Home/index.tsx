@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './style'
 import { Colors } from '../../globals/Colors'
 import { FontSizes } from '../../globals/FontSizes'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const HomeScreen = ({ navigation, route }: any) => {
 
@@ -21,7 +22,17 @@ const HomeScreen = ({ navigation, route }: any) => {
   const [search_document_pressed, set_search_document_pressed] = useState(false);
 
   const [date, set_date] = useState("");
-  const [open_upload_date_picker, set_open_upload_date_picker] = useState(false)
+  const [open_upload_date_picker, set_open_upload_date_picker] = useState(false);
+  const [selected_category, set_selected_category] = useState(null)
+  const [selected_sub_category, set_selected_sub_category] = useState(null);
+  const [open_category_dropdown, set_open_category_dropdown] = useState(false);
+  const [open_sub_category_dropdown, set_sub_open_category_dropdown] = useState(false);
+
+
+  const [category_list, set_category_list] = useState([
+    { label: "Personal", value: "personal" },
+    { label: "Professional", value: "professional" },
+  ]);
 
   const upload_documemnt_handler = async () => {
     try {
@@ -38,6 +49,23 @@ const HomeScreen = ({ navigation, route }: any) => {
       console.log("Error while uploading document =========> ", error)
     }
   };
+
+  //   const upload_event_image_handler = async () => {
+  //   try {
+      
+  //     await ImagePicker.openPicker({
+  //       width: 300,
+  //       height: 400,
+  //       // cropping: true,
+  //     }).then(async (image: any) => {
+  //       let image_to_send = { ...image, imageUri: image.path.startsWith('file://') ? image.path : `file://${image.path}` }
+  //     }).catch((err: any) => console.log(err))
+  //   } catch (error) {
+  //     console.log("Error uploading profile picture ==========>", error)
+  //   } finally {
+  
+  //   }
+  // };
 
   return (
     <View style={styles.mainContainer}>
@@ -103,7 +131,50 @@ const HomeScreen = ({ navigation, route }: any) => {
                       />
                     )}
                   </View>
+                  <View style={{ marginVertical: 20, gap: 10 }}>
+                    <Text style={styles.titleHeading}>Select a category</Text>
+                    <DropDownPicker
+                      open={open_category_dropdown}
+                      value={selected_category}
+                      items={category_list}
+                      setOpen={set_open_category_dropdown}
+                      setValue={set_selected_category}
+                      setItems={set_category_list}
+                      placeholder="Select category"
+                      style={styles.dropdown}
+                      dropDownContainerStyle={styles.dropdownContainer}
+                    />
+                  </View>
+
+                  <View style={{ marginBottom: 20, gap: 10 }}>
+                    <Text style={styles.titleHeading}>Select a sub category</Text>
+                    <DropDownPicker
+                      open={open_sub_category_dropdown}
+                      value={selected_category}
+                      items={category_list}
+                      disabled={!selected_category}
+                      setOpen={set_open_category_dropdown}
+                      setValue={set_selected_category}
+                      setItems={set_category_list}
+                      placeholder="Select sub category"
+                      style={styles.dropdown}
+                      dropDownContainerStyle={styles.dropdownContainer}
+                    />
+                  </View>
                 </View>
+                <TouchableOpacity
+                  style={styles.generateOTPButton}
+                  activeOpacity={0.7}
+                  disabled={upload_document_pressed}
+                  onPress={() => {
+                    set_open_upload_modal(true)
+                  }}
+                >
+                  <Text style={styles.generateOTPText}>
+                    Upload
+                  </Text>
+
+                </TouchableOpacity>
               </View>
             </View>
           </Modal>
