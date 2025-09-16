@@ -3,10 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/Login';
 import HomeScreen from '../screens/Home';
+import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
+
+  const token = useSelector((state: any) => state.main.token);
+
   return (
     <NavigationContainer >
       <Stack.Navigator
@@ -14,8 +18,9 @@ const RootNavigator = () => {
           headerShown: false
         }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        {
+          token ? <Stack.Screen name="Home" component={HomeScreen} /> : <Stack.Screen name="Login" component={LoginScreen} />
+        }
       </Stack.Navigator>
     </NavigationContainer>
   )

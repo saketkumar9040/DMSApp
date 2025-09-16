@@ -20,11 +20,12 @@ const generate_otp = async (mobile_number: any) => {
     }
 };
 
-const validate_otp = async (otp: any) => {
+const validate_otp = async (mobile_number: any, otp: any) => {
     try {
         let fetchParameter: any = {
             method: 'POST',
             body: JSON.stringify({
+                mobile_number,
                 otp
             }),
             headers: {
@@ -32,7 +33,7 @@ const validate_otp = async (otp: any) => {
                 'Content-Type': 'application/json',
             },
         };
-        let serverResponse = await fetch(URL + "/generateOTP", fetchParameter);
+        let serverResponse = await fetch(URL + "/validateOTP", fetchParameter);
         let response = await serverResponse.json();
         return response;
     } catch (error) {
@@ -119,5 +120,4 @@ export default {
     upload_file,
     search_document,
     document_tags
-
 }

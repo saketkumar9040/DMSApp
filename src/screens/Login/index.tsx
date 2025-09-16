@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import styles from './style';
 import { Colors } from '../../globals/Colors';
 import APIServices from '../../services/APIServices';
-import { set_token } from '../../redux/slices/mainSlice';
+import { set_user_data } from '../../redux/slices/mainSlice';
 
 const LoginScreen = ({ navigation }: any) => {
 
@@ -21,13 +21,12 @@ const LoginScreen = ({ navigation }: any) => {
             set_otp_button_pressed(true);
             const res: any = await APIServices.generate_otp(mobile_number);
             console.log("Generate OTP response ==========> ", res);
-            set_is_otp_sent(true)
-            return;
-            // if (res.code == 200) {
-            //     set_otp("123456")
-            // } else {
-            //     Alert.alert("Alert", res.data)
-            // }
+            if (res.status == true) {
+                set_is_otp_sent(true)
+                return;
+            } else {
+                return Alert.alert("Alert", res.data)
+            }
         } catch (error) {
             console.log("Error while generating otp ==========> ", error)
         } finally {
@@ -38,17 +37,15 @@ const LoginScreen = ({ navigation }: any) => {
     const validate_otp_handler = async () => {
         try {
             set_otp_button_pressed(true);
-            const res: any = await APIServices.validate_otp(otp);
-            console.log("Generate OTP response ==========> ", res);
-            dispatch(set_token(res?.token))
-            // if (res.code == 200) {
-
-            // } else {
-            //     Alert.alert("Alert", res.data)
-            // }
-            return navigation.navigate("Home")
+            const res: any = await APIServices.validate_otp(mobile_number, otp);
+            console.log("validate OTP response ==========> ", res);
+            if (res.status == true) {
+                dispatch(set_user_data(res.data))
+            } else {
+                Alert.alert("Alert", res.data)
+            }
         } catch (error) {
-            console.log("Error while generating otp ==========> ", error)
+            console.log("Error while validating otp ==========> ", error)
         } finally {
             set_otp_button_pressed(false)
         }
@@ -74,7 +71,7 @@ const LoginScreen = ({ navigation }: any) => {
                             placeholderTextColor={Colors.grey}
                             style={styles.textInput}
                             keyboardType='numeric'
-                            maxLength={10}
+                            maxLength={6}
                             value={otp}
                             onChangeText={(e) => set_otp(e)}
                         />
