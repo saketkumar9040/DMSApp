@@ -5,6 +5,8 @@ import {
 
 import RootNavigator from "./src/navigations/RootNavigator"
 import { Colors } from './src/globals/Colors';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store/store';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -12,7 +14,9 @@ function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={Colors.teal} />
-      <RootNavigator />
+      <Provider store={store}>
+        <RootNavigator />
+      </Provider>
     </SafeAreaProvider>
   );
 };

@@ -20,6 +20,104 @@ const generate_otp = async (mobile_number: any) => {
     }
 };
 
+const validate_otp = async (otp: any) => {
+    try {
+        let fetchParameter: any = {
+            method: 'POST',
+            body: JSON.stringify({
+                otp
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        let serverResponse = await fetch(URL + "/generateOTP", fetchParameter);
+        let response = await serverResponse.json();
+        return response;
+    } catch (error) {
+        console.log("Error while generating OTP", error)
+    }
+};
+
+const upload_file = async (file: any, text: any) => {
+    try {
+        const formData = new FormData();
+        formData.append('image', {
+            uri: file?.path || file?.uri,
+            type: file?.mime || file?.type,
+            name: file?.filename || file?.name,
+        });
+        let fetchParameter: any = {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Accept: 'application/json',
+            },
+        };
+        let serverResponse = await fetch(URL + "/saveDocumentEntry", fetchParameter);
+        let response = await serverResponse.json();
+        return response;
+    } catch (error) {
+        console.log("Error while generating OTP", error)
+    }
+};
+
+const search_document = async (major_head: any, minor_head: any, from_date: any, to_date: any, tags: any, uploaded_by: any, start: 0, length: 10, filterId: any, search: any) => {
+    try {
+        let fetchParameter: any = {
+            method: 'POST',
+            body: JSON.stringify({
+                major_head,
+                minor_head,
+                from_date,
+                to_date,
+                tags,
+                uploaded_by,
+                start: 0,
+                length: 10,
+                filterId,
+                search
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        let serverResponse = await fetch(URL + "/searchDocumentEntry", fetchParameter);
+        let response = await serverResponse.json();
+        return response;
+    } catch (error) {
+        console.log("Error while generating OTP", error)
+    }
+};
+
+const document_tags = async (term: any) => {
+    try {
+        let fetchParameter: any = {
+            method: 'POST',
+            body: JSON.stringify({
+                term
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        let serverResponse = await fetch(URL + "/generateOTP", fetchParameter);
+        let response = await serverResponse.json();
+        return response;
+    } catch (error) {
+        console.log("Error while generating OTP", error)
+    }
+};
+
 export default {
-    generate_otp
+    generate_otp,
+    validate_otp,
+    upload_file,
+    search_document,
+    document_tags
+
 }

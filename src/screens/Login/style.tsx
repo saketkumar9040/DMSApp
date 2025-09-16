@@ -47,6 +47,12 @@ const styles = StyleSheet.create({
     docsImage: {
         height: 120,
         width: 120,
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: Colors.grey,
+        borderRadius: 10,
+        paddingHorizontal: 10,
     }
 })
 

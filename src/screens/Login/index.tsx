@@ -1,14 +1,19 @@
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
-import styles from './style'
+import { useDispatch } from 'react-redux';
+
+import styles from './style';
 import { Colors } from '../../globals/Colors';
 import APIServices from '../../services/APIServices';
-
+import { set_token } from '../../redux/slices/mainSlice';
 
 const LoginScreen = ({ navigation }: any) => {
 
+    const dispatch = useDispatch()
+
     const [otp, set_otp] = useState("");
     const [mobile_number, set_mobile_number] = useState("");
+    const [is_otp_sent, set_is_otp_sent] = useState(false);
     const [otp_button_pressed, set_otp_button_pressed] = useState(false)
 
     const generate_otp_handler = async () => {
@@ -16,11 +21,13 @@ const LoginScreen = ({ navigation }: any) => {
             set_otp_button_pressed(true);
             const res: any = await APIServices.generate_otp(mobile_number);
             console.log("Generate OTP response ==========> ", res);
-            if (res.code == 200) {
-                set_otp("123456")
-            } else {
-                Alert.alert("Alert", res.data)
-            }
+            set_is_otp_sent(true)
+            return;
+            // if (res.code == 200) {
+            //     set_otp("123456")
+            // } else {
+            //     Alert.alert("Alert", res.data)
+            // }
         } catch (error) {
             console.log("Error while generating otp ==========> ", error)
         } finally {
@@ -33,11 +40,13 @@ const LoginScreen = ({ navigation }: any) => {
             set_otp_button_pressed(true);
             const res: any = await APIServices.validate_otp(otp);
             console.log("Generate OTP response ==========> ", res);
-            if (res.code == 200) {
+            dispatch(set_token(res?.token))
+            // if (res.code == 200) {
 
-            } else {
-                Alert.alert("Alert", res.data)
-            }
+            // } else {
+            //     Alert.alert("Alert", res.data)
+            // }
+            return navigation.navigate("Home")
         } catch (error) {
             console.log("Error while generating otp ==========> ", error)
         } finally {
@@ -59,12 +68,13 @@ const LoginScreen = ({ navigation }: any) => {
             </View>
             <View style={styles.textInputContainer}>
                 {
-                    otp ? (
+                    is_otp_sent ? (
                         <TextInput
-                            placeholder='Enter mobile number'
+                            placeholder='Enter OTP'
                             placeholderTextColor={Colors.grey}
-                            style={{ borderWidth: 1, borderColor: Colors.grey, borderRadius: 10, paddingHorizontal: 10, }}
+                            style={styles.textInput}
                             keyboardType='numeric'
+                            maxLength={10}
                             value={otp}
                             onChangeText={(e) => set_otp(e)}
                         />
@@ -72,21 +82,21 @@ const LoginScreen = ({ navigation }: any) => {
                         <TextInput
                             placeholder='Enter mobile number'
                             placeholderTextColor={Colors.grey}
-                            style={{ borderWidth: 1, borderColor: Colors.grey, borderRadius: 10, paddingHorizontal: 10, }}
+                            style={styles.textInput}
                             keyboardType='numeric'
+                            maxLength={10}
                             value={mobile_number}
                             onChangeText={(e) => set_mobile_number(e)}
                         />
                     )
                 }
-
             </View>
             <TouchableOpacity
                 style={styles.generateOTPButton}
                 activeOpacity={0.7}
                 disabled={otp_button_pressed}
                 onPress={() => {
-                    otp ? validate_otp_handler() : generate_otp_handler()
+                    is_otp_sent ? validate_otp_handler() : generate_otp_handler()
                 }}
             >
                 {
@@ -96,7 +106,7 @@ const LoginScreen = ({ navigation }: any) => {
 
                         <Text style={styles.generateOTPText}>
                             {
-                                otp ? "Validate OTP" : "Generate OTP"
+                                is_otp_sent ? "Validate OTP" : "Generate OTP"
                             }
                         </Text>
                     )
