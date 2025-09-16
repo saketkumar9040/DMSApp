@@ -4,13 +4,14 @@ import {
 } from 'react-native-safe-area-context';
 
 import RootNavigator from "./src/navigations/RootNavigator"
+import { Colors } from './src/globals/Colors';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={Colors.teal} />
       <RootNavigator />
     </SafeAreaProvider>
   );

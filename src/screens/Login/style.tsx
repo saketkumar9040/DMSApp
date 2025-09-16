@@ -12,10 +12,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bg
     },
     loginContainer: {
-        marginBottom: 40
+        marginBottom: 40,
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 50
     },
     loginText: {
-        fontSize: FontSizes.font24,
+        fontSize: FontSizes.font26,
         color: Colors.black,
         fontWeight: "600",
         textAlign: "center"
@@ -40,6 +43,10 @@ const styles = StyleSheet.create({
         width: width * 0.5,
         alignItems: "center",
         justifyContent: "center"
+    },
+    docsImage: {
+        height: 120,
+        width: 120,
     }
 })
 
