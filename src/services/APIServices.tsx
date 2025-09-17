@@ -42,33 +42,38 @@ const validate_otp = async (mobile_number: any, otp: any) => {
     }
 };
 
-const upload_file = async (file: any, text: any) => {
-    try {
-        const token: any = await AsyncStorage.getItem("token");
-        const formData = new FormData();
-        formData.append('image', {
-            uri: file?.path || file?.uri,
-            type: file?.mime || file?.type,
-            name: file?.filename || file?.name,
-        });
-        let fetchParameter: any = {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                Accept: 'application/json',
-                'token': `${token}`
-            },
-        };
-        let serverResponse = await fetch(URL + "/saveDocumentEntry", fetchParameter);
-        let response = await serverResponse.json();
-        return response;
-    } catch (error) {
-        console.log("Error while uploading file", error)
-    }
+const upload_file = async (file: any, major_head: any, minor_head: any, document_date: any, document_remarks: any, selected_tag: any, user_id: any) => {
+    return new Promise<void>(async (resolve, reject) => {
+        try {
+            console.log(file, major_head, minor_head, document_date, document_remarks, selected_tag, user_id)
+            const token: any = await AsyncStorage.getItem("token");
+            const formData = new FormData();
+            formData.append('file', {
+                uri: file?.path || file?.uri,
+                type: file?.mime || file?.type,
+                name: file?.filename || file?.name,
+            });
+            formData.append('data', { major_head, minor_head, document_date, document_remarks, tags: [{ tag_name: selected_tag }], user_id })
+            let fetchParameter: any = {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Accept: 'application/json',
+                    'token': `${token}`
+                },
+            };
+            let serverResponse = await fetch(URL + "/saveDocumentEntry", fetchParameter);
+            let response = await serverResponse.json();
+            resolve(response)
+        } catch (error) {
+            console.log("Error upload file ------->", error)
+            reject(error)
+        }
+    })
 };
 
-const search_document = async (major_head: any, minor_head: any, from_date: any, to_date: any, tags: any, uploaded_by: any, start: 0, length: 10, filterId: any, search: any) => {
+const search_document = async (major_head: any, minor_head: any, from_date: any, to_date: any, tags: any, uploaded_by: any, filterId: any, search: any) => {
     try {
         const token: any = await AsyncStorage.getItem("token");
         let fetchParameter: any = {
