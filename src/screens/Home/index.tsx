@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import styles from './style'
 import { Colors } from '../../globals/Colors'
@@ -86,7 +87,16 @@ const HomeScreen = ({ navigation, route }: any) => {
       const res: any = await APIServices.upload_file(image, selected_category, selected_sub_category, date, remarks, selected_tag, store_user_data.user_id)
       console.log("upload file response =========> ", res);
       if (res.status == true) {
-
+        set_open_upload_modal(false);
+        set_date("");
+        set_image(null);
+        set_selected_category(null);
+        set_selected_sub_category(null);
+        set_selected_tag(null);
+        set_remarks("")
+        return Alert.alert(res.message)
+      } else if (res.status == false) {
+        return Alert.alert(res.message)
       }
     } catch (error) {
       console.log("Error while uploading document =========> ", error)
@@ -143,8 +153,6 @@ const HomeScreen = ({ navigation, route }: any) => {
 
   const pick_image_handler = async () => {
     try {
-
-
       const res = await pick({
         type: [types.pdf, types.images],
       });
@@ -156,7 +164,35 @@ const HomeScreen = ({ navigation, route }: any) => {
     } catch (error) {
       console.log("Error while selecting image ========> ",)
     }
-  }
+  };
+
+  const take_picture_handler = async () => {
+    try {
+      const options: any = {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 2000,
+        maxWidth: 2000,
+      };
+
+      launchCamera(options, (response: any) => {
+        if (response.didCancel) {
+          console.log('User cancelled camera');
+        } else if (response.error) {
+          console.log('Camera Error: ', response.error);
+        } else {
+          console.log(response)
+          let imageUri = response.uri || response.assets?.[0]?.uri;
+          set_image(response.assets?.[0]);
+          console.log(imageUri);
+        }
+      });
+
+      return
+    } catch (error) {
+      console.log("Error while selecting image ========> ",)
+    }
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -341,17 +377,27 @@ const HomeScreen = ({ navigation, route }: any) => {
                     )}
                   </View>
                   {image && (
-                    <Image
-                      source={{ uri: image.uri }}
-                      style={{ width: Dimensions.get("window").width - 20, height: 200, alignSelf: "center", marginVertical: 20 }}
-                      resizeMode='contain'
-                    />
+                    <>
+                      <Image
+                        source={{ uri: image.uri }}
+                        style={{ width: Dimensions.get("window").width - 20, height: 200, alignSelf: "center", marginVertical: 20 }}
+                        resizeMode='contain'
+                      />
+                      <Text style={styles.titleHeading}>{image?.name ? image?.name : image?.fileName}</Text>
+                    </>
                   )}
-                  <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginVertical: 15 }}>
+                  <View style={{ alignItems: "center", justifyContent: 'space-between', marginVertical: 15 }}>
                     <Text style={styles.titleHeading}>Pick A image</Text>
-                    <TouchableOpacity style={styles.titleTextInput} onPress={() => pick_image_handler()}>
-                      <Text style={styles.titleHeading}>{image ? image.name : "select image"}</Text>
-                    </TouchableOpacity>
+
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginVertical: 15, gap: 15 }}>
+
+                      <TouchableOpacity style={styles.titleTextInput} onPress={() => pick_image_handler()}>
+                        <Text style={styles.titleHeading}>{"Gallery"}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.titleTextInput} onPress={() => take_picture_handler()}>
+                        <Text style={styles.titleHeading}>{"Camera"}</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
 
                   <View style={{ marginVertical: 20, gap: 10 }}>
