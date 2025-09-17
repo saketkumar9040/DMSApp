@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './style';
 import { Colors } from '../../globals/Colors';
@@ -40,6 +41,7 @@ const LoginScreen = ({ navigation }: any) => {
             const res: any = await APIServices.validate_otp(mobile_number, otp);
             console.log("validate OTP response ==========> ", res);
             if (res.status == true) {
+                const store_token = await AsyncStorage.setItem("token", res.data.token)
                 dispatch(set_user_data(res.data))
             } else {
                 Alert.alert("Alert", res.data)

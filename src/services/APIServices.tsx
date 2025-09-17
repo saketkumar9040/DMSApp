@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { URL } from "../globals/Constants"
 
 const generate_otp = async (mobile_number: any) => {
@@ -37,12 +38,13 @@ const validate_otp = async (mobile_number: any, otp: any) => {
         let response = await serverResponse.json();
         return response;
     } catch (error) {
-        console.log("Error while generating OTP", error)
+        console.log("Error while validating OTP", error)
     }
 };
 
 const upload_file = async (file: any, text: any) => {
     try {
+        const token: any = await AsyncStorage.getItem("token");
         const formData = new FormData();
         formData.append('image', {
             uri: file?.path || file?.uri,
@@ -55,18 +57,20 @@ const upload_file = async (file: any, text: any) => {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Accept: 'application/json',
+                'token': `${token}`
             },
         };
         let serverResponse = await fetch(URL + "/saveDocumentEntry", fetchParameter);
         let response = await serverResponse.json();
         return response;
     } catch (error) {
-        console.log("Error while generating OTP", error)
+        console.log("Error while uploading file", error)
     }
 };
 
 const search_document = async (major_head: any, minor_head: any, from_date: any, to_date: any, tags: any, uploaded_by: any, start: 0, length: 10, filterId: any, search: any) => {
     try {
+        const token: any = await AsyncStorage.getItem("token");
         let fetchParameter: any = {
             method: 'POST',
             body: JSON.stringify({
@@ -84,18 +88,20 @@ const search_document = async (major_head: any, minor_head: any, from_date: any,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'token': `${token}`
             },
         };
         let serverResponse = await fetch(URL + "/searchDocumentEntry", fetchParameter);
         let response = await serverResponse.json();
         return response;
     } catch (error) {
-        console.log("Error while generating OTP", error)
+        console.log("Error while search document", error)
     }
 };
 
 const document_tags = async (term: any) => {
     try {
+        const token: any = await AsyncStorage.getItem("token");
         let fetchParameter: any = {
             method: 'POST',
             body: JSON.stringify({
@@ -104,13 +110,14 @@ const document_tags = async (term: any) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'token': `${token}`
             },
         };
-        let serverResponse = await fetch(URL + "/generateOTP", fetchParameter);
+        let serverResponse = await fetch(URL + "documentTags", fetchParameter);
         let response = await serverResponse.json();
         return response;
     } catch (error) {
-        console.log("Error while generating OTP", error)
+        console.log("Error while fetching document tags", error)
     }
 };
 

@@ -5,6 +5,7 @@ const initialState = {
     user_id: null,
     user_name: null,
     roles: null,
+    tags: null
 };
 
 export const mainSlice = createSlice({
@@ -19,10 +20,13 @@ export const mainSlice = createSlice({
         },
         set_logout: (state, action) => {
             return state = initialState
+        },
+        set_tags: (state, action) => {
+            state.tags = action.payload
         }
     },
 })
 
-export const { set_token, set_user_data, set_logout } = mainSlice.actions
+export const { set_token, set_user_data, set_logout, set_tags } = mainSlice.actions
 
 export default mainSlice.reducer;

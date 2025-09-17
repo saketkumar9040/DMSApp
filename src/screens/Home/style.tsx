@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bg
     },
     loginContainer: {
-        marginTop: 40,
+        marginTop: 10,
         alignItems: "center",
         justifyContent: "center",
         gap: 50,
@@ -111,11 +111,21 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.bg
     },
     dropdown: {
+        zIndex: 1,
         borderColor: "#aaa",
     },
     dropdownContainer: {
         borderColor: "#aaa",
     },
+    tagTextInput: {
+        borderWidth: 1,
+        borderColor: Colors.grey,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+    },
+    item: { paddingVertical: 10, paddingHorizontal: 12 },
+    itemText: { color: Colors.black, fontSize: 16 },
+    separator: { height: 1, backgroundColor: "#2A2A2A" },
 })
 
 export default styles;
