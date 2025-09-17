@@ -1,6 +1,7 @@
 # INSTRUCTIONS
 
- STEP 1. CLONE THE REPO
+ STEP 1. CLONE THE REPO 
+ git clone https://github.com/saketkumar9040/DMSApp.git
  STEP 2. OPEN THE TERMINAL FROM THE PROJECT FOLDER. 
  STEP 3. RUN npm i
  STEP 4. GO TO ANDROID FOLDER cd android
