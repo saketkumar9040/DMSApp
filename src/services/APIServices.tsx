@@ -53,7 +53,7 @@ const upload_file = async (file: any, major_head: any, minor_head: any, document
                 type: file?.mime || file?.type,
                 name: file?.filename || file?.name,
             });
-            formData.append('data', { major_head, minor_head, document_date, document_remarks, tags: [{ tag_name: selected_tag }], user_id })
+            formData.append('data', JSON.stringify({ major_head, minor_head, document_date, document_remarks, tags: [{ tag_name: selected_tag }], user_id }))
             let fetchParameter: any = {
                 method: 'POST',
                 body: formData,
